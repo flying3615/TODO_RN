@@ -3,21 +3,16 @@ import React from 'react';
 import NavigationExperimental from 'react-native-deprecated-custom-components';
 import TaskList from "./TaskList"
 import TaskForm from "./TaskForm"
+import store from './todoStore'
 
 class Todo extends React.Component {
 
     constructor(props, context) {
         super(props, context);
-        this.state = {
-            todos: [
-                {
-                    task: 'Learn react native'
-                },
-                {
-                    task: 'Learn react Redux'
-                }
-            ]
-        }
+        this.state = store.getState()
+        store.subscribe(()=>{
+            this.setState(store.getState())
+        })
     }
 
     onAddStarted() {
@@ -33,17 +28,19 @@ class Todo extends React.Component {
 
     onDone(todo) {
         console.log('task was completed', todo.task)
-        const filteredTodos = this.state.todos.filter((filterTodo) => {
-            return filterTodo !== todo
+        store.dispatch({
+            type:'DONE_TODO',
+            todo
         })
-        this.setState({todos: filteredTodos})
     }
 
 
     onAdd(task) {
         console.log('a task was add', task);
-        this.state.todos.push({task})
-        this.setState({todos: this.state.todos})
+        store.dispatch({
+            type:'ADD_TODO',
+            task,
+        })
         this.nav.pop();
     }
 
