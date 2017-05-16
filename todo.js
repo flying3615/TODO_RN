@@ -44,13 +44,19 @@ class Todo extends React.Component {
         this.nav.pop();
     }
 
+    onToggle(){
+        store.dispatch({
+            type:'TOGGLE_STATE'
+        })
+    }
+
 
     renderScene(route, nav) {
         switch (route.name) {
             case 'taskform':
                 return (<TaskForm onCancel={this.onCancel.bind(this)} onAdd={this.onAdd.bind(this)}/>)
             default:
-                return (<TaskList todos={this.state.todos} onDone={this.onDone.bind(this)}
+                return (<TaskList onToggle={this.onToggle.bind(this)} filter={this.state.filter} todos={this.state.todos} onDone={this.onDone.bind(this)}
                                   onAddStarted={this.onAddStarted.bind(this)}/>)
 
 

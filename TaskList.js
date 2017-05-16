@@ -1,4 +1,4 @@
-import {View, ListView, StyleSheet, TouchableHighlight, Text} from 'react-native'
+import {View, ListView, StyleSheet, TouchableHighlight, Text, Switch} from 'react-native'
 import React from 'react'
 import TaskRow from './TaskRow/Component'
 
@@ -21,6 +21,18 @@ const styles = StyleSheet.create({
         color: '#FAFAFA',
         fontSize: 20,
         fontWeight: '600'
+    },
+    toggleRow:{
+        flexDirection:'row',
+        padding:10
+    },
+    switch:{
+
+    },
+    toggleText:{
+        fontSize:20,
+        paddingLeft:10,
+        paddingTop:3
     }
 })
 
@@ -40,7 +52,7 @@ class TaskList extends React.Component {
     }
 
     //refresh list view when data changed
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
         const dataSource = this.state.dataSource.cloneWithRows(nextProps.todos)
         this.setState({dataSource})
     }
@@ -54,11 +66,17 @@ class TaskList extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <View style={styles.toggleRow}>
+                    <Switch style={styles.switch} value={this.props.filter!=='pending'} onValueChange={this.props.onToggle}/>
+                    <Text style={styles.toggleText}>
+                        Showing {this.props.todos.length} {this.props.filter} todo(s)
+                    </Text>
+                </View>
                 <ListView dataSource={this.state.dataSource}
                           renderRow={this.renderRow.bind(this)}
                           key={this.props.todos}/>
 
-                <TouchableHighlight style={styles.button} onPress={this.props.onAddStarted} >
+                <TouchableHighlight style={styles.button} onPress={this.props.onAddStarted}>
                     <Text style={styles.buttonText}>
                         Add one
                     </Text>
@@ -72,7 +90,9 @@ class TaskList extends React.Component {
 TaskList.propTypes = {
     onDone: React.PropTypes.func.isRequired,
     onAddStarted: React.PropTypes.func.isRequired,
-    todos: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+    todos: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+    filter:React.PropTypes.string.isRequired,
+    onToggle: React.PropTypes.func.isRequired
 }
 
 export default TaskList
